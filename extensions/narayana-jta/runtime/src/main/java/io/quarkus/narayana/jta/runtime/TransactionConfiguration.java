@@ -31,4 +31,12 @@ public @interface TransactionConfiguration {
      * @return The transaction timeout in seconds.
      */
     int timeout() default UNSET_TIMEOUT;
+
+    /**
+     * Whether or not the transaction performs read only operations on the underlying transactional resource.
+     * Depending on the transactional resource, optimizations can be performed in case of read only transactions.
+     *
+     * @return true if read only.
+     */
+    boolean readOnly() default false;
 }

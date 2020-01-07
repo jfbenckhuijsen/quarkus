@@ -24,7 +24,12 @@ import javax.transaction.Synchronization;
 import javax.transaction.TransactionManager;
 import javax.transaction.TransactionSynchronizationRegistry;
 
+import org.hibernate.FlushMode;
+import org.hibernate.Session;
+
 import io.quarkus.hibernate.orm.runtime.RequestScopedEntityManagerHolder;
+import io.quarkus.narayana.jta.runtime.TransactionConfiguration;
+import io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorBase;
 import io.quarkus.runtime.BlockingOperationControl;
 
 public class TransactionScopedEntityManager implements EntityManager {
@@ -55,6 +60,16 @@ public class TransactionScopedEntityManager implements EntityManager {
                 return new EntityManagerResult(em, false, true);
             }
             EntityManager newEm = emf.createEntityManager();
+
+            TransactionConfiguration config = (TransactionConfiguration) tsr
+                    .getResource(TransactionalInterceptorBase.CONFIG_KEY);
+            if (config != null && config.readOnly()) {
+                Session session = newEm.unwrap(Session.class);
+                session.setDefaultReadOnly(true);
+                session.setHibernateFlushMode(FlushMode.MANUAL);
+                //TODO maybe set back the flush mode / default read only somewhere ?
+            }
+
             newEm.joinTransaction();
             tsr.putResource(transactionKey, newEm);
             tsr.registerInterposedSynchronization(new Synchronization() {

@@ -13,6 +13,7 @@ import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
+import javax.transaction.TransactionSynchronizationRegistry;
 import javax.transaction.Transactional;
 
 import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
@@ -35,8 +36,13 @@ public abstract class TransactionalInterceptorBase implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    public static final Object CONFIG_KEY = new Object();
+
     @Inject
     TransactionManager transactionManager;
+
+    @Inject
+    TransactionSynchronizationRegistry transactionSynchronizationRegistry;
 
     private final boolean userTransactionAvailable;
 
@@ -119,6 +125,8 @@ public abstract class TransactionalInterceptorBase implements Serializable {
                 tm.setTransactionTimeout(currentTmTimeout);
             }
         }
+        // put the transaction configuration inside the synchronization registry to access it from Hibernate
+        transactionSynchronizationRegistry.putResource(CONFIG_KEY, configAnnotation);
 
         boolean throwing = false;
         Object ret = null;
@@ -263,8 +271,8 @@ public abstract class TransactionalInterceptorBase implements Serializable {
 
     private void checkConfiguration(InvocationContext ic) {
         TransactionConfiguration configAnnotation = getTransactionConfiguration(ic);
-        if (configAnnotation != null && configAnnotation.timeout() != TransactionConfiguration.UNSET_TIMEOUT) {
-            throw new RuntimeException("Changing timeout via @TransactionConfiguration can only be done " +
+        if (configAnnotation != null) {
+            throw new RuntimeException("Changing timeout or readOnly via @TransactionConfiguration can only be done " +
                     "at the entry level of a transaction");
         }
     }
