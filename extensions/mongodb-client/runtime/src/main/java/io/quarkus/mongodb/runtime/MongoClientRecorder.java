@@ -18,12 +18,14 @@ import io.quarkus.runtime.annotations.Recorder;
 @Recorder
 public class MongoClientRecorder {
 
-    public Supplier<MongoClientSupport> mongoClientSupportSupplier(List<String> codecProviders, List<String> bsonDiscriminators,
-            List<ConnectionPoolListener> connectionPoolListeners, boolean disableSslSupport) {
+    public Supplier<MongoClientSupport> mongoClientSupportSupplier(List<String> codecProviders,
+            List<String> propertyCodecProviders,
+            List<String> bsonDiscriminators, List<ConnectionPoolListener> connectionPoolListeners, boolean disableSslSupport) {
         return new Supplier<MongoClientSupport>() {
             @Override
             public MongoClientSupport get() {
-                return new MongoClientSupport(codecProviders, bsonDiscriminators, connectionPoolListeners, disableSslSupport);
+                return new MongoClientSupport(codecProviders, propertyCodecProviders, bsonDiscriminators,
+                        connectionPoolListeners, disableSslSupport);
             }
         };
     }

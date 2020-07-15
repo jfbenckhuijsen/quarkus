@@ -559,6 +559,11 @@ a discriminator field inside the document. It can be useful when working with ab
 
 Quarkus will automatically register all the classes annotated with `@BsonDiscriminator` with the POJO codec.
 
+The POJO Codec have enhanced generic support via `PropertyCodecProvider`,
+Quarkus will automatically register any `PropertyCodecProvider` with the POJO Codec.
+If you deploy your application as a native executable, be aware that reflection may not work properly with generic types, so you may need to register it manually for reflection,
+see link:writing-native-applications-tips#registering-for-reflection[Registering For Reflection]
+
 == Simplifying MongoDB with Panache
 
 The link:mongodb-panache[MongoDB with Panache] extension facilitates the usage of MongoDB by providing active record style entities (and repositories) like you have in link:hibernate-orm-panache.html[Hibernate ORM with Panache] and focuses on making your entities trivial and fun to write in Quarkus.

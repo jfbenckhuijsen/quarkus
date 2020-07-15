@@ -92,6 +92,7 @@ When using Maven, we could use the following configuration:
 </profiles>
 ----
 
+[#registering-for-reflection]
 === Registering for reflection
 
 When building a native executable, GraalVM operates with a closed world assumption.
