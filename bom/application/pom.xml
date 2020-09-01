@@ -290,7 +290,6 @@
             </dependency>
 
             <!-- Google Cloud dependencies, imported as a BOM -->
-            <!-- Warning : it will also manage the version of Guava -->
             <dependency>
                 <groupId>com.google.cloud</groupId>
                 <artifactId>libraries-bom</artifactId>
