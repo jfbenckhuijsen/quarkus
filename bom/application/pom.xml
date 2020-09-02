@@ -206,7 +206,9 @@
         <log4j2-jboss-logmanager.version>1.0.0.Beta1</log4j2-jboss-logmanager.version>
         <log4j-jboss-logmanager.version>1.2.0.Final</log4j-jboss-logmanager.version>
         <avro.version>1.10.0</avro.version>
-        <google-cloud-sdk.version>9.1.0</google-cloud-sdk.version>
+        <!-- Version 10.0.0 exist but it causes a library dependency issue with micrometer,
+        see https://github.com/micrometer-metrics/micrometer/issues/2249 -->
+        <google-cloud-sdk.version>8.1.0</google-cloud-sdk.version>
         <!-- The Google Cloud BOM include the 'android' version of Guava so we need to fix the 'jre' version.
         Make sure to keep these two libraries compatible. -->
         <guava.version>29.0-jre</guava.version>
